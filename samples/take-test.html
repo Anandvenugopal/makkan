@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Take a test — BrainTest (sample)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,20,0;9..144,600,20,0&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      .sample-banner{background:#ecad83;color:#173432;text-align:center;font-size:12px;font-weight:700;padding:9px 16px}
+      .runner{background:radial-gradient(circle at 76% 30%,#e7f2e9 0,#f7f8f5 50%);min-height:calc(100vh - 120px);padding:28px 0 60px}
+      .runner-wrap{width:min(100% - 40px,760px);margin:0 auto}
+      .back-link{font-size:13px;font-weight:700;color:#49776c;display:inline-flex;gap:8px;margin-bottom:16px}
+      .back-link:hover{color:var(--ink)}
+
+      /* Card shell mirrors the home page's assessment preview */
+      .qcard{scroll-margin-top:12px;background:#f9faf6;border-radius:13px;box-shadow:0 25px 70px #0c292c22;overflow:hidden;border:1px solid #e6ece4}
+      .qtop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:19px 28px;font-size:10px;color:#78968c;font-weight:700;letter-spacing:.06em}
+      .qtop .preview-logo{flex:none}
+      .qtop-title{flex:1;text-transform:uppercase;letter-spacing:.12em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .qprogress{height:3px;background:#e5ebe3}
+      .qprogress span{display:block;height:100%;background:#6caa85;transition:width .35s}
+      .qbody{padding:32px 44px 32px}
+      .qstep{font-size:10px;letter-spacing:.14em;color:#6da489;font-weight:700;text-transform:uppercase}
+      .qstem{color:#879a90;font-size:13px;line-height:1.6;margin:12px 0 0}
+      .qtext{font-family:var(--display);font-weight:500;font-size:clamp(24px,2.8vw,30px);line-height:1.2;letter-spacing:-.035em;margin:12px 0 22px;color:var(--ink)}
+      .qimage-note{font-size:12px;color:#b06f45;background:#f9eee3;border-radius:6px;padding:10px 12px;margin:-12px 0 22px}
+      .qoptions{display:grid;gap:8px}
+      .qopt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:1px solid #dae6db;background:#fff;border-radius:7px;padding:13px 18px;color:#4d665d;font-size:14px;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
+      .qopt:hover{border-color:#9cc6ad}
+      .qopt[aria-pressed=true]{border-color:#67a787;background:#eaf5e9;color:#2e6a4f;font-weight:600}
+      .qopt .dot{width:16px;height:16px;border-radius:50%;border:1.5px solid #b9cfc1;flex:none;transition:.2s}
+      .qopt[aria-pressed=true] .dot{border-color:#3f8a64;background:#3f8a64;box-shadow:inset 0 0 0 3px #eaf5e9}
+      .qnav{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:24px}
+      .qnav .button{min-width:150px;border:0;cursor:pointer}
+      .qnav .button[disabled]{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+      .button-ghost{background:none;color:#49776c;box-shadow:inset 0 0 0 1px #c9d8cf}
+
+      /* Intro + results */
+      .intro h1,.result h1{font-family:var(--display);font-weight:500;font-size:clamp(34px,4.4vw,48px);line-height:1.08;letter-spacing:-.05em;margin:16px 0 14px}
+      .intro p,.result p{color:#6c7d77;font-size:14px;line-height:1.75;margin:0 0 12px}
+      .facts{display:flex;gap:26px;flex-wrap:wrap;border-top:1px solid #e3eae3;border-bottom:1px solid #e3eae3;padding:16px 0;margin:22px 0 26px}
+      .facts div{display:flex;flex-direction:column;gap:3px}
+      .facts small{font-size:9px;letter-spacing:.15em;font-weight:700;color:#8ea69b}
+      .facts strong{font-size:14px}
+      /* Intro: description, details and Start button share the left edge */
+      .intro #start{border:0;cursor:pointer;margin:0 0 26px}
+      .intro details{border-top:1px solid #e3eae3;padding:12px 0}
+      .intro summary{cursor:pointer;font-size:12px;font-weight:700;color:#49776c;list-style-position:inside}
+      .intro details p,.intro details li{font-size:12px;line-height:1.6;color:#7c8c85;margin:10px 0 0}
+      .intro details ul{margin:0;padding-left:18px}
+      /* Instructions show as a one-line reminder above each question; tap to read in full */
+      button.qstem{display:block;width:100%;border:0;background:none;padding:0;text-align:left;font:inherit;font-size:13px;cursor:pointer}
+      .qstem.compact{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+      .scale-result{border:1px solid #e3eae3;border-radius:10px;padding:20px 22px;margin-bottom:14px;background:#fff}
+      .scale-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+      .scale-head h3{margin:0;font-family:var(--display);font-weight:500;font-size:21px;letter-spacing:-.02em}
+      .scale-score{font-family:var(--display);font-size:26px;font-weight:600;letter-spacing:-.03em}
+      .scale-score small{font-family:var(--body);font-size:12px;color:#93a39b;font-weight:500}
+      .meter{height:6px;border-radius:6px;background:#e8eee8;margin:12px 0 12px;overflow:hidden}
+      .meter span{display:block;height:100%;background:linear-gradient(90deg,#82ba9b,#2f6f68);border-radius:6px}
+      .band-label{font-size:11px;letter-spacing:.12em;font-weight:700;color:#b06f45;text-transform:uppercase}
+      .scale-result p{margin:6px 0 0;font-size:13px}
+      .safety{border:1px solid #e8b48f;background:#fdf3ea;border-radius:10px;padding:20px 22px;margin-bottom:18px}
+      .safety h3{margin:0 0 6px;font-size:16px;color:#8a4a22}
+      .safety p{margin:0 0 8px;color:#6d4a33!important}
+      .safety a{font-weight:700;text-decoration:underline}
+      .qnumber{width:100%;max-width:260px;border:1px solid #dae6db;border-radius:7px;padding:15px 18px;font:inherit;font-size:18px;color:var(--ink);background:#fff}
+      .qnumber:focus{outline:3px solid #e6aa76;outline-offset:2px}
+      .code-pill{font-family:var(--display);font-size:44px;letter-spacing:.06em;color:#1d5550;margin:4px 0 10px}
+      .result-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+      .result-actions .button{min-width:0;border:0;cursor:pointer}
+      .disclaimer{font-size:11px;color:#8a9890;line-height:1.6;margin-top:22px}
+      @media(max-width:560px){.qbody{padding:30px 22px 28px}.qtop{padding:16px 18px}.qnav .button{min-width:0;flex:1}}
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="tests-sample.html" aria-label="BrainTest tests">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <span>brain<span class="brand-accent">test</span><span class="brand-dot">.</span></span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a class="nav-link" href="tests-sample.html">Home</a>
+          <a class="nav-link active" href="tests-sample.html">Tests</a>
+          <a class="nav-link" href="dashboard.html">Dashboard</a>
+          <a class="nav-link" href="pricing.html">Pricing</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="runner">
+      <div class="runner-wrap">
+        <a class="back-link" id="back-link" href="tests-sample.html">← All tests</a>
+        <div class="qcard">
+          <div class="qtop"><span class="preview-logo">✳</span><span class="qtop-title" id="qtop-title">BrainTest / Assessment</span><span id="qtop-count"></span></div>
+          <div class="qprogress"><span id="qprogress" style="width:0"></span></div>
+          <div class="qbody" id="qbody" aria-live="polite"></div>
+        </div>
+      </div>
+    </main>
+
+    <script src="data/tests-data.js"></script>
+    <script src="js/engine.js"></script>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const DATA = window.TEST_DATA || {};
+      const body = document.getElementById('qbody');
+      const bar = document.getElementById('qprogress');
+      const countEl = document.getElementById('qtop-count');
+      const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+      const Engine = window.BrainEngine;
+      const rootId = params.get('test');
+      const { root, parts, items } = Engine.buildItems(rootId);
+
+      const answers = {};
+      let index = -1; // -1 = intro screen
+      let savedRecord = null;
+
+      const key = Engine.keyOf;
+      const audience = root && root.audience === 'student' ? '#students' : '';
+      document.getElementById('back-link').href = 'tests-sample.html' + audience;
+
+      function renderIntro() {
+        bar.style.width = '0';
+        countEl.textContent = `${items.length} questions`;
+        const minutes = root.estimatedMinutes || parts.reduce((m, t) => m + (t.estimatedMinutes || 0), 0);
+        body.innerHTML = `<div class="intro">
+          <span class="qstep">${esc(root.audience === 'student' ? 'For students' : 'For adults')}</span>
+          <h1>${esc(root.title)}</h1>
+          <p>${esc(root.instructions || 'Answer each question honestly. There are no right or wrong answers.')}</p>
+          <div class="facts">
+            <div><small>QUESTIONS</small><strong>${items.length}</strong></div>
+            <div><small>TIME</small><strong>~${minutes} min</strong></div>
+            <div><small>BASED ON</small><strong>${esc(parts.map((t) => t.instrument.split(' (')[0]).join(' + '))}</strong></div>
+          </div>
+          <button class="button button-primary" id="start">Start test <span aria-hidden="true">↗</span></button>
+        </div>`;
+        document.getElementById('start').onclick = () => go(0);
+      }
+
+      function renderQuestion() {
+        const it = items[index];
+        if (it.q.type === 'number') return renderNumberQuestion(it);
+        const chosen = answers[key(it)];
+        const stem = it.section.instructions || it.test.instructions;
+        bar.style.width = `${(index / items.length) * 100}%`;
+        countEl.textContent = `${String(index + 1).padStart(2, '0')} — ${String(items.length).padStart(2, '0')}`;
+        document.getElementById('qtop-title').textContent = `BrainTest / ${it.test.title}`;
+        body.innerHTML = `
+          <span class="qstep">${esc(it.section.title || it.test.title)}</span>
+          ${stem ? `<button type="button" class="qstem compact" aria-expanded="false" title="Show full instructions">${esc(stem)}</button>` : ''}
+          <h2 class="qtext">${esc(it.q.text)}</h2>
+          ${it.q.requiresImage ? `<p class="qimage-note">This item uses a picture from the original test${it.q.imageSource ? ` (<a href="${esc(it.q.imageSource)}" target="_blank" rel="noopener">source</a>)` : ''}. Images are not included in this sample.</p>` : ''}
+          <div class="qoptions" role="group" aria-label="Answer options">
+            ${it.options.map((o, i) => `<button type="button" class="qopt" data-i="${i}" aria-pressed="${chosen !== undefined && String(chosen) === String(o.value)}"><span class="dot"></span>${esc(o.label)}</button>`).join('')}
+          </div>
+          <div class="qnav">
+            <button class="button button-ghost" id="prev">← Back</button>
+            <button class="button button-primary" id="next" ${chosen === undefined ? 'disabled' : ''}>${index === items.length - 1 ? 'See my results' : 'Next'} <span aria-hidden="true">↗</span></button>
+          </div>`;
+        const stemBtn = body.querySelector('button.qstem');
+        if (stemBtn) stemBtn.onclick = () => stemBtn.setAttribute('aria-expanded', String(stemBtn.classList.toggle('compact') === false));
+        // Selecting only marks the answer; the user can change it and moves on with Next
+        body.querySelectorAll('.qopt').forEach((b) => b.onclick = () => {
+          answers[key(it)] = it.options[+b.dataset.i].value;
+          body.querySelectorAll('.qopt').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+          document.getElementById('next').disabled = false;
+        });
+        document.getElementById('prev').onclick = () => go(index - 1);
+        document.getElementById('next').onclick = () => go(index + 1);
+      }
+
+      // Free-number questions (e.g. recent exam marks); optional ones can be left blank
+      function renderNumberQuestion(it) {
+        const chosen = answers[key(it)];
+        bar.style.width = `${(index / items.length) * 100}%`;
+        countEl.textContent = `${String(index + 1).padStart(2, '0')} — ${String(items.length).padStart(2, '0')}`;
+        document.getElementById('qtop-title').textContent = `BrainTest / ${it.test.title}`;
+        body.innerHTML = `
+          <span class="qstep">${esc(it.section.title || it.test.title)}</span>
+          ${it.section.instructions ? `<p class="qstem">${esc(it.section.instructions)}</p>` : ''}
+          <h2 class="qtext">${esc(it.q.text)}</h2>
+          <input class="qnumber" id="qnumber" type="number" inputmode="decimal" min="${it.q.min ?? ''}" max="${it.q.max ?? ''}" value="${chosen ?? ''}" placeholder="${it.q.optional ? 'Optional' : ''}" aria-label="${esc(it.q.text)}" />
+          <div class="qnav">
+            <button class="button button-ghost" id="prev">← Back</button>
+            <button class="button button-primary" id="next">${index === items.length - 1 ? 'See my results' : 'Next'} <span aria-hidden="true">↗</span></button>
+          </div>`;
+        const input = document.getElementById('qnumber');
+        const nextBtn = document.getElementById('next');
+        const sync = () => {
+          const v = input.value.trim();
+          const n = Number(v);
+          const valid = v === '' ? !!it.q.optional : !Number.isNaN(n) && (it.q.min === undefined || n >= it.q.min) && (it.q.max === undefined || n <= it.q.max);
+          nextBtn.disabled = !valid;
+          answers[key(it)] = v === '' ? '' : n;
+        };
+        input.oninput = sync;
+        sync();
+        document.getElementById('prev').onclick = () => go(index - 1);
+        nextBtn.onclick = () => go(index + 1);
+      }
+
+      function scaleCard(r) {
+        return `<div class="scale-result">
+          <div class="scale-head"><h3>${esc(r.name)}</h3><span class="scale-score">${r.score}<small> / ${r.sc.range ? r.sc.range[1] : ''}</small></span></div>
+          <div class="meter"><span style="width:${Math.max(3, Math.min(100, r.pct))}%"></span></div>
+          ${r.band ? `<span class="band-label">${esc(r.band.label)}</span><p>${esc(r.band.meaning)}</p>` : (r.profile ? `<p>${esc(r.profile.description)}</p>` : '')}
+        </div>`;
+      }
+
+      function streamSummary(fits, stream) {
+        // Below 40 nothing is a match yet (the file's lowest band), so don't name a stream
+        if (fits[0].score < 40) {
+          return `<div class="scale-result"><span class="band-label">No clear match yet</span>
+            <p>Your answers don't point strongly to one stream yet. That's common at this stage. A conversation with a counsellor, and trying subjects you enjoy, can help you decide.</p>
+            ${stream.preference ? `<p>You said you would most enjoy: <strong>${esc(stream.preference)}</strong>. Your own interest matters, so start there.</p>` : ''}
+          </div>`;
+        }
+        const close = fits.length > 1 && fits[1].score >= 40 && fits[0].score - fits[1].score < 10;
+        const fitKey = { science: 'fit_science', commerce: 'fit_commerce', humanities: 'fit_humanities' }[stream.value];
+        const matches = fitKey && (fitKey === fits[0].sc.section || (close && fitKey === fits[1].sc.section));
+        return `<div class="scale-result"><span class="band-label">${close ? 'You have more than one good option' : 'Your strongest match'}</span>
+          <div class="code-pill" style="font-size:34px;letter-spacing:-.02em">${esc(close ? `${fits[0].name} · ${fits[1].name}` : fits[0].name)}</div>
+          ${stream.preference ? `<p>You said you would most enjoy: <strong>${esc(stream.preference)}</strong>. ${matches ? 'That fits your results.' : 'That differs from your strongest match. It is worth talking through with a counsellor, and your own interest still matters.'}</p>` : ''}
+        </div>`;
+      }
+
+      function renderResults() {
+        bar.style.width = '100%';
+        countEl.textContent = 'Results';
+        const { scored } = Engine.score(rootId, answers);
+        // Save once per completion so the report and dashboard can show it
+        if (!savedRecord) {
+          savedRecord = Engine.toRecord(rootId, answers);
+          Engine.saveResult(savedRecord);
+        }
+        const safety = scored.find((s) => s.safetyHit);
+        const support = safety && Engine.safetyInfo(safety.t);
+        // The Stream Selector's component tests feed its result instead of showing separately
+        const shown = root.id === 'stream-selector' ? scored.filter((s) => s.t.id === 'stream-selector') : scored;
+        body.innerHTML = `<div class="result">
+          <span class="qstep">Your results</span>
+          <h1>${esc(root.title)}</h1>
+          ${safety ? `<div class="safety"><h3>Please reach out for support now</h3><p>${esc(support.message)}</p>${support.resources.map((r) => `<p><strong>${esc(r.name)}</strong>${r.contact ? `: ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.contact)}</a>` : esc(r.contact)}` : ''}</p>`).join('')}</div>` : ''}
+          ${shown.map(({ t, results, stream }) => {
+            // Holland codes (single-letter profile keys) get a top-three summary
+            const riasec = (t.scoring.profiles || []).length > 0 && t.scoring.profiles.every((p) => p.key.length === 1);
+            const list = riasec || stream ? [...results].sort((a, b) => b.score - a.score) : results;
+            const fits = stream ? list.filter((r) => /^fit_/.test(r.sc.section)) : [];
+            const cards = stream ? fits.concat(list.filter((r) => !/^fit_/.test(r.sc.section))) : list;
+            return `
+            ${shown.length > 1 ? `<p class="qstep" style="display:block;margin:24px 0 10px">${esc(t.title)}</p>` : ''}
+            ${riasec ? `<div class="scale-result"><span class="band-label">Your top three</span><div class="code-pill">${list.slice(0, 3).map((r) => esc(r.sc.section)).join('')}</div><p>${list.slice(0, 3).map((r) => `<strong>${esc(r.name)}</strong>${r.profile && r.profile.exampleCareersIndia ? `: ${esc(r.profile.exampleCareersIndia.slice(0, 4).join(', '))}` : ''}`).join('<br />')}</p></div>` : ''}
+            ${stream && fits.length ? streamSummary(fits, stream) : ''}
+            ${cards.map(scaleCard).join('')}`;
+          }).join('')}
+          <div class="result-actions">
+            <a class="button button-primary" href="report.html?id=${savedRecord.id}">View my report <span aria-hidden="true">↗</span></a>
+            <a class="button button-ghost" href="dashboard.html${audience}">Dashboard <span aria-hidden="true">↗</span></a>
+            <button class="button button-ghost" id="retake">Retake</button>
+          </div>
+        </div>`;
+        document.getElementById('retake').onclick = () => { Object.keys(answers).forEach((k) => delete answers[k]); savedRecord = null; go(-1); };
+      }
+
+      function go(i) {
+        index = Math.max(-1, Math.min(i, items.length));
+        if (index === -1) renderIntro();
+        else if (index === items.length) renderResults();
+        else renderQuestion();
+        // During the questions the card sits at the top of the screen, in the same place every time,
+        // so Next stays visible without scrolling. Intro and results start from the top of the page.
+        if (index >= 0 && index < items.length) document.querySelector('.qcard').scrollIntoView({ block: 'start', behavior: 'instant' });
+        else window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+
+      if (!root || !items.length) {
+        body.innerHTML = `<h1 class="qtext">This test isn't available in the sample yet.</h1><p class="qstem">Pick another test from the list.</p>`;
+      } else {
+        document.title = `${root.title} — BrainTest (sample)`;
+        go(-1);
+      }
+    </script>
+  </body>
+</html>

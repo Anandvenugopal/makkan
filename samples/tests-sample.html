@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BrainTest — Tests (sample)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,20,0;9..144,600,20,0&display=swap" rel="stylesheet" />
+    <!-- Reuses the live site's stylesheet so tokens, buttons, kickers and headings match exactly -->
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      /* ---- New styles for the test catalogue (would move into styles.css) ---- */
+      .test-catalog{background:#fff}
+
+      /* Header: heading left, lead right, bottoms aligned */
+      .catalog-head{display:grid;grid-template-columns:1fr auto;gap:56px;align-items:end}
+      .catalog-head h2{font-family:var(--display);font-weight:500;letter-spacing:-.058em;font-size:clamp(43px,4vw,62px);line-height:1.12;margin:20px 0 0}
+      .catalog-head h2 em{font-weight:500;color:#5b9c84}
+      .catalog-head p{width:420px;color:#71817a;font-size:14px;line-height:1.75;margin:0 0 8px}
+
+      /* Editorial tabs on a hairline */
+      .tabbar{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;border-bottom:1px solid #e3eae3;margin-top:40px}
+      .tabs{display:flex;gap:44px}
+      .tab{position:relative;border:0;background:none;cursor:pointer;padding:0 0 16px;font-family:var(--display);font-size:28px;font-weight:500;letter-spacing:-.03em;line-height:1;color:#9aaba3;transition:color .2s}
+      .tab:hover{color:#5b7b70}
+      .tab sup{font-family:var(--body);font-size:10px;font-weight:700;letter-spacing:0;margin-left:5px}
+      .tab[aria-selected=true]{color:var(--ink)}
+      .tab[aria-selected=true] sup{color:#b06f45}
+      .tab:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#34766d;transform:scaleX(0);transform-origin:left;transition:transform .3s}
+      .tab[aria-selected=true]:after{transform:scaleX(1)}
+      .tab:focus-visible{outline-offset:6px}
+      .tab-count{font-size:12px;color:#81938a;padding-bottom:18px;white-space:nowrap}
+      .tab-count strong{color:var(--ink)}
+
+      /* Cards: no boxed chips, only type and hairlines */
+      .test-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;margin-top:36px}
+      .test-card{display:flex;flex-direction:column;background:var(--cream);border:1px solid #e3eae3;border-radius:10px;padding:26px 24px 24px;transition:transform .25s,box-shadow .25s,border-color .3s,background .3s,color .3s;animation:cardIn .4s both}
+      .test-card:hover,.test-card:focus-within{transform:translateY(-4px);box-shadow:0 22px 45px #183f3d40}
+      .test-card :is(.test-label,.test-num,p,.test-meta,.test-meta i,.test-price,.price-was,.price-save){transition:color .3s,background .3s,border-color .3s}
+      .test-card:is(:hover,:focus-within){background:#183f3d;color:#fff;border-color:#183f3d}
+      @keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+      .test-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+      .test-label{font-size:10px;letter-spacing:.16em;font-weight:700;color:#49776c;text-transform:uppercase}
+      .test-card:is(:hover,:focus-within) .test-label{color:#ecad83}
+      /* "Most complete" / "Most popular" label stays orange so the top pick still stands out */
+      .featured .test-label{color:#c07a4d}
+      .test-num{font-family:var(--display);font-size:15px;color:#b5c3bb;letter-spacing:-.02em}
+      .test-card:is(:hover,:focus-within) .test-num{color:#4f7c76}
+      .test-card h3{font-family:var(--display);font-weight:500;font-size:24px;line-height:1.15;letter-spacing:-.03em;margin:16px 0 10px}
+      .test-card p{margin:0;color:#6c7d77;font-size:13px;line-height:1.65}
+      .test-card:is(:hover,:focus-within) p{color:#bbcfca}
+      .test-meta{margin-top:16px;font-size:12px;color:#7d918a;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+      .test-meta i{width:3px;height:3px;border-radius:50%;background:#b7c6bd}
+      .test-card:is(:hover,:focus-within) .test-meta{color:#a5cdb8}
+      .test-card:is(:hover,:focus-within) .test-meta i{background:#4f7c76}
+      .test-foot{margin-top:auto;padding-top:22px}
+      .test-price{display:flex;align-items:baseline;gap:10px;border-top:1px solid #e3eae3;padding-top:18px}
+      .test-card:is(:hover,:focus-within) .test-price{border-color:#335e5a}
+      .price-now{font-family:var(--display);font-size:30px;font-weight:600;letter-spacing:-.04em;line-height:1}
+      .price-was{font-size:14px;color:#93a39b;text-decoration:line-through;text-decoration-color:#d3976d}
+      .test-card:is(:hover,:focus-within) .price-was{color:#8fb0a6}
+      .price-save{margin-left:auto;font-size:11px;font-weight:700;color:#c07a4d;white-space:nowrap}
+      .test-card:is(:hover,:focus-within) .price-save{color:#ecad83}
+      .test-card .button{width:100%;min-width:0;margin-top:18px;padding:15px 18px}
+      /* On a green card the dark button flips to the light one so it stays visible */
+      .test-card:is(:hover,:focus-within) .button-primary{background:#e7f3e8;color:#194640}
+      .catalog-note{margin:28px 0 0;font-size:10px;color:#8a9890;line-height:1.5}
+
+      @media(max-width:1100px){.test-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+      @media(max-width:760px){
+        .catalog-head{grid-template-columns:1fr;gap:18px}
+        .catalog-head p{width:auto;max-width:480px}
+        .tab-count{display:none}
+        .tabs{gap:30px}
+        .tab{font-size:24px}
+      }
+      @media(max-width:560px){.test-grid{grid-template-columns:1fr}.tab{font-size:21px}}
+
+      /* Sample-only banner */
+      .sample-banner{background:#ecad83;color:#173432;text-align:center;font-size:12px;font-weight:700;padding:9px 16px}
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="#tests" aria-label="BrainTest home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <span>brain<span class="brand-accent">test</span><span class="brand-dot">.</span></span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a class="nav-link" href="#tests">Home</a>
+          <a class="nav-link active" href="#tests">Tests</a>
+          <a class="nav-link" href="dashboard.html">Dashboard</a>
+          <a class="nav-link" href="pricing.html">Pricing</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="test-catalog section-pad" id="tests" aria-labelledby="catalog-title">
+        <div class="container">
+          <div class="catalog-head">
+            <div>
+              <div class="section-kicker"><span></span> ASSESSMENT LIBRARY</div>
+              <h2 id="catalog-title">Find the right <em>starting point.</em></h2>
+            </div>
+            <p>Each assessment uses a recognised screening scale and ends with a clear report you can take to a qualified professional.</p>
+          </div>
+
+          <div class="tabbar">
+            <div class="tabs" role="tablist" aria-label="Choose who the tests are for">
+              <button class="tab" type="button" role="tab" id="tab-adult" data-audience="adult" aria-controls="test-grid">For adults<sup>08</sup></button>
+              <button class="tab" type="button" role="tab" id="tab-student" data-audience="student" aria-controls="test-grid">For students<sup>08</sup></button>
+            </div>
+            <span class="tab-count" aria-live="polite"></span>
+          </div>
+
+          <div class="test-grid" id="test-grid" role="tabpanel"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="data/tests-data.js"></script>
+    <script src="js/catalog.js"></script>
+    <script>
+      const TESTS = window.BRAIN_CATALOG.tests;
+
+      // Struck-through "was" price is 1.5x the selling price (₹2,000 → ₹3,000)
+      // Time and question count come from the researched questionnaires (data/tests-data.js)
+      const DATA = window.TEST_DATA || {};
+      const partsOf = (id) => {
+        const d = DATA[id];
+        if (!d) return [];
+        if (!(d.componentsOf && d.componentsOf.length)) return [d];
+        const own = (d.sections || []).some((s) => (s.questions || []).length);
+        return [...d.componentsOf.flatMap(partsOf), ...(own ? [d] : [])];
+      };
+      Object.values(TESTS).flat().forEach((t) => {
+        const parts = partsOf(t.id);
+        if (!parts.length) return;
+        const count = parts.reduce((n, d) => n + d.sections.reduce((m, s) => m + (s.questions || []).length, 0), 0);
+        const minutes = DATA[t.id].estimatedMinutes || parts.reduce((m, d) => m + (d.estimatedMinutes || 0), 0);
+        t.meta.splice(0, 2, `${minutes} min`, `${count} questions`);
+      });
+
+      const inr = (n) => '₹' + n.toLocaleString('en-IN');
+      const wasPrice = (p) => Math.round((p * 1.5) / 50) * 50;
+      const pad = (n) => String(n).padStart(2, '0');
+
+      const grid = document.getElementById('test-grid');
+      const tabs = document.querySelectorAll('.tab');
+      const count = document.querySelector('.tab-count');
+
+      function render(audience) {
+        const tests = TESTS[audience];
+        grid.innerHTML = tests.map((t, i) => {
+          const was = wasPrice(t.price);
+          const off = Math.round((1 - t.price / was) * 100);
+          return `<article class="test-card${t.featured ? ' featured' : ''}" style="animation-delay:${i * 45}ms">
+            <div class="test-top"><span class="test-label">${t.label}</span><span class="test-num">${pad(i + 1)}</span></div>
+            <h3>${t.title}</h3>
+            <p>${t.desc}</p>
+            <div class="test-meta">${t.meta.join('<i aria-hidden="true"></i>')}</div>
+            <div class="test-foot">
+              <div class="test-price">
+                <span class="price-now">${inr(t.price)}</span>
+                <s class="price-was"><span class="sr-only">Original price </span>${inr(was)}</s>
+                <span class="price-save">Save ${off}%</span>
+              </div>
+              <a class="button button-primary" href="take-test.html?test=${t.id}">Take this test <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>`;
+        }).join('');
+        tabs.forEach((tab) => {
+          const on = tab.dataset.audience === audience;
+          tab.setAttribute('aria-selected', String(on));
+          tab.tabIndex = on ? 0 : -1;
+        });
+        grid.setAttribute('aria-labelledby', `tab-${audience}`);
+        count.innerHTML = `Showing <strong>${tests.length}</strong> assessments for ${audience === 'adult' ? 'adults' : 'students'}`;
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => render(tab.dataset.audience));
+        // Arrow keys move between tabs
+        tab.addEventListener('keydown', (e) => {
+          if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+          const next = [...tabs].find((t) => t !== tab);
+          next.focus();
+          render(next.dataset.audience);
+        });
+      });
+
+      // Deep links: #students opens the student view, anything else defaults to adults
+      const fromHash = () => (location.hash === '#students' ? 'student' : 'adult');
+      window.addEventListener('hashchange', () => render(fromHash()));
+      render(fromHash());
+    </script>
+    <style>.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style>
+  </body>
+</html>

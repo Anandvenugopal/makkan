@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report — BrainTest (sample)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,20,0;9..144,600,20,0&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body{background:#eef1ec}
+      .toolbar{position:sticky;top:0;z-index:5;background:#f7f8f5ee;backdrop-filter:blur(6px);border-bottom:1px solid #e3eae3}
+      .toolbar-inner{width:min(100% - 32px,820px);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
+      .toolbar a.back{font-size:13px;font-weight:700;color:#49776c}
+      .toolbar .button{min-width:0;border:0;cursor:pointer;padding:12px 18px}
+      .pages{width:min(100% - 32px,820px);margin:28px auto 60px;display:grid;gap:28px}
+      .page{background:#fff;border-radius:14px;box-shadow:0 20px 60px #1d4a401a;padding:48px 52px}
+
+      /* Page header */
+      .rhead{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-bottom:18px;border-bottom:1px solid #e3eae3}
+      .rhead .brand{font-size:20px}
+      .rmeta{text-align:right;font-size:11px;color:#7d918a;line-height:1.6}
+      .rmeta strong{color:var(--ink)}
+      .rkicker{font-size:10px;letter-spacing:.17em;font-weight:700;color:#49776c;text-transform:uppercase;margin:28px 0 0}
+      .rtitle{font-family:var(--display);font-weight:500;font-size:40px;line-height:1.08;letter-spacing:-.05em;margin:8px 0 0}
+
+      /* Headline result */
+      .hero-res{margin-top:22px;border-radius:12px;background:linear-gradient(135deg,#dfeee5,#f3f2ea);padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+      .hero-res small{display:block;font-size:10px;letter-spacing:.15em;font-weight:700;color:#49776c;text-transform:uppercase}
+      .hero-res strong{display:block;font-family:var(--display);font-weight:500;font-size:30px;letter-spacing:-.03em;line-height:1.15;margin-top:6px}
+      .hero-res span{font-size:13px;color:#5f726b}
+
+      .rsec{margin-top:30px}
+      .rsec h2{font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:-.02em;margin:0 0 14px}
+      .scale{padding:14px 0;border-bottom:1px solid #edf1ec}
+      .scale:last-child{border-bottom:0}
+      .scale-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+      .scale-top strong{font-size:14px}
+      .scale-top span{font-family:var(--display);font-size:20px;font-weight:600}
+      .scale-top span small{font-family:var(--body);font-size:11px;color:#93a39b;font-weight:500}
+      .meaning{margin:0;font-size:13px;color:#5f726b;line-height:1.65}
+      .meaning b{color:#b06f45;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-right:6px}
+      .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+      .tile{border:1px solid #e3eae3;border-radius:10px;padding:14px 16px}
+      .tile h3{margin:0;font-size:13px}
+      .tile p{margin:4px 0 0;font-size:11px;color:#b06f45;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+      .tile .val{float:right;font-family:var(--display);font-weight:600;font-size:18px}
+      .two{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+      .careers{display:grid;gap:10px}
+      .career{border-left:3px solid #d3976d;padding:4px 0 4px 14px}
+      .career strong{display:block;font-size:14px}
+      .career span{font-size:12px;color:#5f726b;line-height:1.55}
+      .steps{counter-reset:s;list-style:none;margin:0;padding:0;display:grid;gap:10px}
+      .steps li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:12px;font-size:13px;color:#4d665d;line-height:1.6}
+      .steps li:before{content:counter(s);width:26px;height:26px;border-radius:50%;background:#e2efe6;color:#2f6f68;font-weight:700;font-size:12px;display:grid;place-items:center}
+      .support{margin-top:26px;border:1px solid #e8b48f;background:#fdf3ea;border-radius:10px;padding:18px 20px;font-size:13px;color:#6d4a33;line-height:1.6}
+      .support h3{margin:0 0 6px;font-size:15px;color:#8a4a22}
+      .support p{margin:0 0 6px}
+
+      /* Clinician page */
+      table{width:100%;border-collapse:collapse;font-size:12px}
+      th{text-align:left;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:#7d918a;padding:8px 8px;border-bottom:1px solid #d9e3db}
+      td{padding:7px 8px;border-bottom:1px solid #eef2ee;color:#334a44;vertical-align:top}
+      th.num,td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+      .inst{font-size:12px;color:#7d918a;margin:-8px 0 12px}
+      .part + .part{margin-top:30px}
+      .empty{max-width:560px;margin:80px auto;text-align:center}
+      .empty h1{font-family:var(--display);font-weight:500;font-size:34px}
+
+      @media(max-width:640px){.page{padding:30px 22px}.rtitle{font-size:32px}.hero-res{flex-direction:column;align-items:flex-start}.tiles{grid-template-columns:1fr}.two{grid-template-columns:1fr}.rhead{flex-direction:column;align-items:flex-start}.rmeta{text-align:left}}
+
+      /* Download as PDF: browser print, one report page per sheet */
+      @page{size:A4;margin:12mm}
+      @media print{
+        body{background:#fff}
+        .toolbar{display:none}
+        .pages{width:auto;margin:0;gap:0}
+        .page{box-shadow:none;border-radius:0;padding:0}
+        .page + .page{break-before:page}
+        .scale,.tile,.career,.support,tr,.slider,.sym-row{break-inside:avoid}
+        /* Tighter rhythm on paper so the summary fits its own sheet */
+        .page{zoom:.86}
+        .rsec{margin-top:18px}
+        .rkicker{margin-top:16px}
+        .hero-res{margin-top:14px;padding:14px 20px}
+        .support{margin-top:16px;padding:12px 16px;font-size:12px}
+        .scale{padding:8px 0}
+        .sym-row{padding:3px 0}
+        *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <a class="back" href="dashboard.html">← Dashboard</a>
+        <button class="button button-primary" id="download" type="button">Download PDF <span aria-hidden="true">↓</span></button>
+      </div>
+    </div>
+    <main class="pages" id="pages"></main>
+
+    <script src="data/tests-data.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/charts.js"></script>
+    <script>
+      const Engine = window.BrainEngine, C = window.BrainCharts, esc = C.esc;
+      C.injectStyles();
+      const params = new URLSearchParams(location.search);
+      const rec = Engine.loadResults().find((r) => r.id === params.get('id'));
+      const pages = document.getElementById('pages');
+      const CAREER = ['career-interest', 'career-aptitude', 'stream-selector', 'learning-style', 'study-habits'];
+      // Scales where a higher band is better, so they don't count towards "worth a closer look"
+      const POSITIVE = ['prosocial'];
+
+      const brand = `<span class="brand"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>brain<span class="brand-accent">test</span><span class="brand-dot">.</span></span></span>`;
+      const dateText = (d) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      function header(sub) {
+        return `<div class="rhead">${brand}<div class="rmeta"><strong>${esc(sub)}</strong><br />${esc(dateText(rec.date))}<br />Ref ${esc(rec.id.toUpperCase())}</div></div>`;
+      }
+
+      function scaleBlock(r) {
+        return `<div class="scale">
+          <div class="scale-top"><strong>${esc(r.name)}</strong><span>${r.score}${r.range ? `<small> / ${r.range[1]}</small>` : ''}</span></div>
+          ${C.bandBar(r)}
+          ${r.band ? `<p class="meaning"><b>${esc(r.band.label)}</b>${esc(r.band.meaning || '')}</p>` : (r.profile ? `<p class="meaning">${esc(r.profile.description)}</p>` : '')}
+        </div>`;
+      }
+
+      // The main infographic, chosen per test
+      function mainChart() {
+        const main = rec.parts[rec.parts.length - 1];
+        if (rec.testId === 'personality') {
+          return `<div class="rsec"><h2>Your trait profile</h2>${C.sliders(main.results)}</div>`;
+        }
+        if (rec.testId === 'career-interest') {
+          const top = [...main.results].sort((a, b) => b.score - a.score).slice(0, 3);
+          return `<div class="rsec"><h2>Your interest shape</h2><div class="two">${C.hexagon(main.results, { width: 280 })}
+            <div class="careers">${top.map((r) => `<div class="career"><strong>${esc(r.key)} · ${esc(r.name)}</strong><span>${esc(r.profile ? r.profile.description : '')}</span>${r.profile && r.profile.careers.length ? `<span><br />Careers to explore: ${esc(r.profile.careers.slice(0, 5).join(', '))}</span>` : ''}</div>`).join('')}</div></div></div>`;
+        }
+        if (rec.testId === 'stream-selector') {
+          const conf = main.results.filter((r) => /^selfconcept_/.test(r.key));
+          return `<div class="rsec"><h2>Why each stream fits</h2>${C.stackedFit(main.results)}</div>
+            ${main.stream && main.stream.preference ? `<div class="rsec"><h2>Your own preference</h2><p class="meaning">You said you would most enjoy: <strong>${esc(main.stream.preference)}</strong>. Your interest matters, so weigh it alongside these results with a counsellor.</p></div>` : ''}
+            <div class="rsec"><h2>Confidence by subject</h2>${conf.map(scaleBlock).join('')}</div>`;
+        }
+        if (rec.parts.length > 1) {
+          // Composite: a snapshot tile per area, then the detail
+          const tiles = rec.parts.flatMap((p) => p.results.filter((r) => !POSITIVE.includes(r.key)).slice(0, p.id === 'stress-burnout' ? 2 : 1));
+          return `<div class="rsec"><h2>Wellbeing snapshot</h2><div class="tiles">${tiles.map((r) => `<div class="tile"><span class="val">${r.score}</span><h3>${esc(r.name)}</h3><p>${esc(r.band ? r.band.label : '')}</p>${C.bandBar(r, { compact: true, width: 300 })}</div>`).join('')}</div></div>`;
+        }
+        return `<div class="rsec"><h2>Your scores</h2>${main.results.map(scaleBlock).join('')}</div>`;
+      }
+
+      // Which answers weighed most (symptom tests only)
+      function contributors() {
+        if (CAREER.includes(rec.testId) || rec.testId === 'personality') return '';
+        // Positive-direction scales (e.g. prosocial: kindness) aren't concerns, so they stay out of this list
+        const items = rec.parts.flatMap((p) => p.items).filter((it) => it.severity !== null && it.scored && it.severity > 0 && !POSITIVE.includes(it.factor));
+        if (!items.length) return '';
+        return `<div class="rsec"><h2>What stood out most</h2>${C.symptomStrip(items, { top: 5 })}</div>`;
+      }
+
+      function meanings() {
+        if (rec.parts.length < 2 || rec.testId === 'stream-selector') return '';
+        // The snapshot already draws each bar, so here it's just the plain-language meaning
+        return `<div class="rsec"><h2>What this means</h2>${rec.parts.map((p) => p.results.filter((r) => !POSITIVE.includes(r.key) && r.band).map((r) => `<div class="scale"><div class="scale-top"><strong>${esc(r.name)}</strong><span>${r.score}${r.range ? `<small> / ${r.range[1]}</small>` : ''}</span></div><p class="meaning"><b>${esc(r.band.label)}</b>${esc(r.band.meaning || '')}</p></div>`).join('')).join('')}</div>`;
+      }
+
+      function nextSteps() {
+        if (CAREER.includes(rec.testId)) {
+          return ['Talk through these results with a parent, teacher or career counsellor. They are a starting point, not a final answer.',
+            'Explore two or three of the suggested paths: read about them, watch a day-in-the-life video or talk to someone who works there.',
+            'Keep trying subjects and activities you enjoy. Interests grow and change, so retake this in a year.'];
+        }
+        if (rec.testId === 'personality') {
+          return ['There are no good or bad scores here: each trait has strengths at both ends.',
+            'Notice where your strongest traits help you at work, study and in relationships.',
+            'Personality is fairly stable, but it does shift slowly. Retake in a year to compare.'];
+        }
+        // A safety answer always leads to reaching out, whatever the total score
+        if (rec.parts.some((p) => p.safetyHit)) return ['Please talk to someone today: call Tele-MANAS on 14416 (free, 24x7), or 112 in an emergency.',
+          'Book a conversation with a doctor, psychologist or counsellor soon, and take this report with you. The clinician page lists every answer.',
+          'Tell someone you trust how you are feeling, and stay in touch with them.'];
+        const ranks = rec.parts.flatMap((p) => p.results.filter((r) => !POSITIVE.includes(r.key)).map(Engine.bandRank)).filter((x) => x !== null);
+        const top = ranks.length ? Math.max(...ranks) : 0;
+        if (top >= 0.5) return ['Book a conversation with a doctor, psychologist or counsellor soon, and take this report with you.',
+          'Share the clinician page with them: it lists every score and every answer you gave.',
+          'Retake this check in 2 weeks so you can both see how things change.'];
+        if (top > 0) return ['Keep an eye on how you feel over the next couple of weeks.',
+          'Small, steady habits help: regular sleep, movement, time outdoors and talking with people you trust.',
+          'Retake in 2 weeks. If your score rises or stays here, talk to a professional.'];
+        return ['Your answers are in the lower ranges today.', 'Keep doing what helps you feel well.', 'Check in again in a month, or sooner if things change.'];
+      }
+
+      function supportBox() {
+        const p = rec.parts.find((x) => x.safetyHit && x.safety);
+        if (!p) return '';
+        return `<div class="support"><h3>Support is available now</h3><p>${esc(p.safety.message)}</p>${p.safety.resources.map((r) => `<p><strong>${esc(r.name)}</strong>${r.contact ? `: ${esc(r.contact)}` : ''}</p>`).join('')}</div>`;
+      }
+
+      function clinicianPage() {
+        return `<article class="page">
+          ${header('For your clinician or counsellor')}
+          <p class="rkicker">Score summary and responses</p>
+          <h1 class="rtitle" style="font-size:30px">${esc(rec.title)}</h1>
+          ${rec.parts.map((p) => `<section class="part rsec">
+            <h2>${esc(p.title)}</h2>
+            <p class="inst">${esc(p.instrument)}${p.respondent !== 'self' ? ` · answered by ${esc(p.respondent)}` : ''}${p.safetyHit ? ' · <strong style="color:#b06f45">safety item endorsed</strong>' : ''}</p>
+            <table><thead><tr><th>Scale</th><th class="num">Score</th><th class="num">Range</th><th>Band</th></tr></thead><tbody>
+              ${p.results.map((r) => `<tr><td>${esc(r.name)}</td><td class="num">${r.score}</td><td class="num">${r.range ? `${r.range[0]}–${r.range[1]}` : ''}</td><td>${esc(r.band ? r.band.label : '')}</td></tr>`).join('')}
+            </tbody></table>
+            <table style="margin-top:14px"><thead><tr><th>#</th><th>Question</th><th>Answer</th></tr></thead><tbody>
+              ${p.items.map((it, i) => `<tr><td class="num">${i + 1}</td><td>${esc(it.text)}</td><td>${esc(it.answer)}${it.correct !== null ? (it.correct ? ' ✓' : ' ✗') : ''}${it.reverse ? ' <small style="color:#93a39b">(R)</small>' : ''}</td></tr>`).join('')}
+            </tbody></table>
+          </section>`).join('')}
+        </article>`;
+      }
+
+      if (!rec) {
+        pages.innerHTML = `<div class="empty"><h1>Report not found</h1><p class="meaning">This report isn't saved in this browser. Open it from your dashboard.</p><p><a class="button button-primary" href="dashboard.html">Go to dashboard <span aria-hidden="true">↗</span></a></p></div>`;
+        document.getElementById('download').hidden = true;
+      } else {
+        const h = Engine.headline(rec);
+        document.title = `${rec.title} report — BrainTest`;
+        pages.innerHTML = `<article class="page">
+          ${header('Assessment report')}
+          <p class="rkicker">${esc(rec.audience === 'student' ? 'Student report' : 'Your report')}</p>
+          <h1 class="rtitle">${esc(rec.title)}</h1>
+          <div class="hero-res"><div><small>${esc(h.label)}</small><strong>${esc(h.big)}</strong></div><span>${esc(h.text)}</span></div>
+          ${supportBox()}
+          ${mainChart()}
+          ${contributors()}
+          ${meanings()}
+          <div class="rsec"><h2>Suggested next steps</h2><ol class="steps">${nextSteps().map((s) => `<li>${esc(s)}</li>`).join('')}</ol></div>
+        </article>${clinicianPage()}`;
+        document.getElementById('download').onclick = () => window.print();
+        // Opened from a "Download" button: go straight to the save dialog once fonts are ready
+        if (params.get('print') === '1') document.fonts.ready.then(() => setTimeout(() => window.print(), 300));
+      }
+    </script>
+  </body>
+</html>

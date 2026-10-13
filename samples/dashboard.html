@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — BrainTest (sample)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,20,0;9..144,600,20,0&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      .dash{background:#fff;padding:72px 0 96px;min-height:70vh}
+      .dash-head{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:end}
+      .dash-head h1{font-family:var(--display);font-weight:500;letter-spacing:-.058em;font-size:clamp(40px,4vw,58px);line-height:1.1;margin:18px 0 0}
+      .dash-head h1 em{font-weight:500;color:#5b9c84}
+      .dash-head p{width:380px;color:#71817a;font-size:14px;line-height:1.75;margin:0 0 8px}
+      .block{margin-top:44px}
+      .block-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:16px}
+      .block-head h2{font-family:var(--display);font-weight:500;font-size:26px;letter-spacing:-.03em;margin:0}
+      .block-head span{font-size:12px;color:#81938a}
+
+      /* Snapshot tiles */
+      .tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+      .tile{display:flex;flex-direction:column;border:1px solid #e3eae3;border-radius:12px;padding:18px 18px 16px;background:var(--cream);transition:transform .2s,box-shadow .2s}
+      a.tile:hover{transform:translateY(-3px);box-shadow:0 16px 34px #214f3e17}
+      .tile small{font-size:10px;letter-spacing:.15em;font-weight:700;color:#49776c;text-transform:uppercase}
+      .tile strong{font-family:var(--display);font-weight:500;font-size:19px;letter-spacing:-.02em;line-height:1.2;margin:10px 0 2px;min-height:46px}
+      .tile .when{font-size:11px;color:#8ea69b;margin-top:6px}
+      .tile.empty{background:#fff;border-style:dashed}
+      .tile.empty strong{color:#93a39b}
+      .tile.empty .go{margin-top:auto;font-size:12px;font-weight:700;color:#2f6f68}
+
+      /* Progress */
+      .progress-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+      .panel{border:1px solid #e3eae3;border-radius:12px;padding:20px 22px;background:#fff}
+      .panel h3{margin:0 0 4px;font-size:15px}
+      .panel p{margin:0 0 12px;font-size:12px;color:#7d918a}
+      .hint{border:1px dashed #cfdcd2;border-radius:12px;padding:18px 20px;font-size:13px;color:#6f8379;background:#fafbf8}
+
+      /* Career hub */
+      .hub{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:18px}
+      .code{font-family:var(--display);font-size:46px;letter-spacing:.08em;color:#1d5550;line-height:1}
+      .mini-bars .row{display:grid;grid-template-columns:1fr auto;gap:6px;font-size:12px;margin:10px 0 2px}
+
+      /* History */
+      .history{display:grid;gap:12px}
+      .hist{display:grid;grid-template-columns:1.3fr 1fr auto;gap:20px;align-items:center;border:1px solid #e3eae3;border-radius:12px;padding:18px 22px;background:var(--cream)}
+      .hist h3{margin:0;font-family:var(--display);font-weight:500;font-size:20px;letter-spacing:-.02em}
+      .hist .date{font-size:12px;color:#8ea69b;margin-top:4px}
+      .hist .res small{display:block;font-size:10px;letter-spacing:.14em;font-weight:700;color:#49776c;text-transform:uppercase}
+      .hist .res strong{font-size:15px}
+      .hist .actions{display:flex;gap:10px}
+      .hist .button{min-width:0;padding:12px 16px}
+      .button-ghost{background:#fff;color:#1d5550;box-shadow:inset 0 0 0 1px #c9d8cf}
+
+      .empty-state{text-align:center;border:1px dashed #cfdcd2;border-radius:16px;padding:54px 24px;margin-top:40px;background:#fafbf8}
+      .empty-state h2{font-family:var(--display);font-weight:500;font-size:30px;letter-spacing:-.03em;margin:0 0 8px}
+      .empty-state p{color:#6f8379;font-size:14px;margin:0 0 22px}
+      .empty-state .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+      .dash-tools{display:flex;gap:18px;justify-content:flex-end;margin-top:44px;font-size:12px}
+      .dash-tools button{background:none;border:0;padding:0;color:#7d918a;font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+      .dash-tools button:hover{color:var(--ink)}
+
+      @media(max-width:1100px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.hub{grid-template-columns:1fr 1fr}.hub .panel:last-child{grid-column:1 / -1}}
+      @media(max-width:760px){.dash{padding:48px 0 72px}.dash-head{grid-template-columns:1fr;gap:16px}.dash-head p{width:auto}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.progress-grid,.hub{grid-template-columns:1fr}.hist{grid-template-columns:1fr;gap:12px}}
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="tests-sample.html" aria-label="BrainTest tests">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <span>brain<span class="brand-accent">test</span><span class="brand-dot">.</span></span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a class="nav-link" href="home-option-b.html">Home</a>
+          <a class="nav-link" href="tests-sample.html">Tests</a>
+          <a class="nav-link active" href="dashboard.html" aria-current="page">Dashboard</a>
+          <a class="nav-link" href="pricing.html">Pricing</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="dash">
+      <div class="container">
+        <div class="dash-head">
+          <div>
+            <div class="section-kicker"><span></span> YOUR DASHBOARD</div>
+            <h1>Your results, <em>in one place.</em></h1>
+          </div>
+          <p>Every test you finish is saved here. Open a report any time, download it as a PDF, and see how things change when you retake a check.</p>
+        </div>
+        <div class="tabbar">
+          <div class="tabs" role="tablist" aria-label="Whose results">
+            <button class="tab" type="button" role="tab" data-view="adult">For adults<sup id="n-adult">00</sup></button>
+            <button class="tab" type="button" role="tab" data-view="student">For students<sup id="n-student">00</sup></button>
+          </div>
+          <span class="tab-count" id="saved-count"></span>
+        </div>
+        <div id="view"></div>
+        <div class="dash-tools"><button type="button" id="demo">Load demo results</button><button type="button" id="clear">Clear all results</button></div>
+      </div>
+    </main>
+
+    <script src="data/tests-data.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/charts.js"></script>
+    <script>
+      const Engine = window.BrainEngine, C = window.BrainCharts, esc = C.esc;
+      C.injectStyles();
+      const view = document.getElementById('view');
+      const tabs = document.querySelectorAll('.tab');
+
+      // The areas each dashboard tracks: which test, and which of its scores
+      const AREAS = {
+        adult: [
+          { name: 'Mood', part: 'depression', key: 'phq9', test: 'depression' },
+          { name: 'Anxiety', part: 'anxiety', key: 'gad7', test: 'anxiety' },
+          { name: 'Stress', part: 'stress-burnout', key: 'pss10', test: 'stress-burnout' },
+          { name: 'Burnout', part: 'stress-burnout', key: 'cbi_personal', test: 'stress-burnout' },
+          { name: 'Sleep', part: 'sleep', key: 'total', test: 'sleep' },
+        ],
+        student: [
+          { name: 'Exam stress', part: 'exam-stress', key: 'main', test: 'exam-stress' },
+          { name: 'Emotional wellbeing', part: 'emotional-wellbeing', key: 'total_difficulties', test: 'emotional-wellbeing' },
+          { name: 'Focus', part: 'focus-attention', key: 'combined_parent', test: 'focus-attention' },
+          { name: 'Study habits', part: 'study-habits', key: 'overall', test: 'study-habits' },
+          { name: 'How you learn', part: 'learning-style', key: 'DA', test: 'learning-style' },
+        ],
+      };
+
+      const dateShort = (d) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      const byNewest = (a, b) => new Date(b.date) - new Date(a.date);
+
+      // Every saved reading of one area, oldest first (a composite test counts too)
+      function series(records, area) {
+        return records.flatMap((rec) => rec.parts.filter((p) => p.id === area.part).flatMap((p) => p.results.filter((r) => r.key === area.key).map((r) => ({ rec, r, date: rec.date, score: r.score }))))
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+      }
+
+      function snapshot(records, audience) {
+        return `<section class="block"><div class="block-head"><h2>${audience === 'adult' ? 'Wellbeing snapshot' : 'Wellbeing at school'}</h2><span>Your latest result in each area</span></div>
+          <div class="tiles">${AREAS[audience].map((area) => {
+            const s = series(records, area);
+            const last = s[s.length - 1];
+            if (!last) return `<a class="tile empty" href="take-test.html?test=${area.test}"><small>${esc(area.name)}</small><strong>Not checked yet</strong><span class="go">Take the test ↗</span></a>`;
+            return `<a class="tile" href="report.html?id=${last.rec.id}"><small>${esc(area.name)}</small><strong>${esc(last.r.band ? last.r.band.label : last.r.score)}</strong>${C.bandBar(last.r, { compact: true, width: 220 })}<span class="when">${esc(dateShort(last.date))}${s.length > 1 ? ` · ${s.length} check-ins` : ''}</span></a>`;
+          }).join('')}</div></section>`;
+      }
+
+      function progress(records, audience) {
+        const charts = AREAS[audience].map((area) => ({ area, s: series(records, area) })).filter((x) => x.s.length >= 2);
+        return `<section class="block"><div class="block-head"><h2>Progress over time</h2><span>Lower is calmer for most checks</span></div>
+          ${charts.length ? `<div class="progress-grid">${charts.map(({ area, s }) => {
+            const last = s[s.length - 1].r;
+            return `<div class="panel"><h3>${esc(area.name)}</h3><p>${esc(last.name)} · ${s.length} check-ins</p>${C.progressLine(s.map((x) => ({ date: x.date, score: x.score })), last)}</div>`;
+          }).join('')}</div>` : `<div class="hint">Take a check again in about 2 weeks to see your progress here.</div>`}</section>`;
+      }
+
+      function careerHub(records) {
+        const latest = (id) => records.filter((r) => r.parts.some((p) => p.id === id)).sort(byNewest)[0];
+        const partOf = (rec, id) => rec && rec.parts.find((p) => p.id === id);
+        const interest = latest('career-interest'), aptitude = latest('career-aptitude');
+        const stream = records.filter((r) => r.testId === 'stream-selector').sort(byNewest)[0];
+        const ip = partOf(interest, 'career-interest'), ap = partOf(aptitude, 'career-aptitude'), sp = partOf(stream, 'stream-selector');
+        const empty = (title, test) => `<div class="panel"><h3>${title}</h3><p>Not taken yet.</p><a class="button button-primary" href="take-test.html?test=${test}">Start <span aria-hidden="true">↗</span></a></div>`;
+        const code = ip ? [...ip.results].sort((a, b) => b.score - a.score).slice(0, 3) : [];
+        return `<section class="block"><div class="block-head"><h2>Career profile</h2><span>Interests, thinking skills and stream fit together</span></div><div class="hub">
+          ${ip ? `<a class="panel" href="report.html?id=${interest.id}"><h3>Your Holland code</h3><p>${esc(dateShort(interest.date))}</p><div class="code">${code.map((r) => r.key).join('')}</div><p style="margin-top:8px">${esc(code.map((r) => r.name.replace(/\s*\(.*\)/, '')).join(' · '))}</p>${C.hexagon(ip.results, { width: 220 })}</a>` : empty('Your Holland code', 'career-interest')}
+          ${ap ? `<a class="panel mini-bars" href="report.html?id=${aptitude.id}"><h3>Thinking skills</h3><p>${esc(dateShort(aptitude.date))}</p>${ap.results.map((r) => `<div class="row"><span>${esc(r.name)}</span><strong>${r.score} / ${r.range ? r.range[1] : ''}</strong></div>${C.bandBar(r, { compact: true, width: 260 })}`).join('')}</a>` : empty('Thinking skills', 'career-aptitude')}
+          ${sp ? `<a class="panel" href="report.html?id=${stream.id}"><h3>Stream fit</h3><p>${esc(Engine.headline(stream).big)} · ${esc(dateShort(stream.date))}</p>${C.stackedFit(sp.results)}</a>` : empty('Stream fit', 'stream-selector')}
+        </div></section>`;
+      }
+
+      function historyList(records) {
+        return `<section class="block"><div class="block-head"><h2>All reports</h2><span>${records.length} saved</span></div><div class="history">${records.sort(byNewest).map((rec) => {
+          const h = Engine.headline(rec);
+          return `<div class="hist"><div><h3>${esc(rec.title)}</h3><div class="date">${esc(dateShort(rec.date))}</div></div>
+            <div class="res"><small>${esc(h.label)}</small><strong>${esc(h.big)}</strong></div>
+            <div class="actions"><a class="button button-primary" href="report.html?id=${rec.id}">View report <span aria-hidden="true">↗</span></a><a class="button button-ghost" href="report.html?id=${rec.id}&print=1">Download PDF <span aria-hidden="true">↓</span></a></div></div>`;
+        }).join('')}</div></section>`;
+      }
+
+      function render(audience) {
+        const all = Engine.loadResults();
+        const mine = all.filter((r) => (r.audience || 'adult') === audience);
+        document.getElementById('n-adult').textContent = String(all.filter((r) => (r.audience || 'adult') === 'adult').length).padStart(2, '0');
+        document.getElementById('n-student').textContent = String(all.filter((r) => r.audience === 'student').length).padStart(2, '0');
+        document.getElementById('saved-count').innerHTML = `<strong>${all.length}</strong> reports saved in this browser`;
+        tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.view === audience)));
+        if (!mine.length) {
+          view.innerHTML = `<div class="empty-state"><h2>No ${audience === 'adult' ? '' : 'student '}results yet</h2><p>Finish any test and its report will appear here automatically.</p><div class="actions"><a class="button button-primary" href="tests-sample.html${audience === 'student' ? '#students' : ''}">Browse tests <span aria-hidden="true">↗</span></a></div></div>`;
+          return;
+        }
+        view.innerHTML = (audience === 'adult' ? snapshot(mine, 'adult') + progress(mine, 'adult') : careerHub(mine) + snapshot(mine, 'student') + progress(mine, 'student')) + historyList(mine);
+      }
+
+      // Demo data: realistic answers at a chosen level so the charts have something to show
+      function demoAnswers(testId, level) {
+        const { items } = Engine.buildItems(testId);
+        const offsets = {};
+        const answers = {};
+        items.forEach((it) => {
+          const k = Engine.keyOf(it);
+          if (it.q.type === 'number') { answers[k] = Math.round(58 + level * 30 + Math.random() * 10); return; }
+          if (!it.options.length) return;
+          // Demo data only touches the self-harm question at the highest levels, so demos aren't alarming
+          if (it.q.safetyItem && level < 0.8) { answers[k] = [...it.options].sort((a, b) => Number(a.value) - Number(b.value))[0].value; return; }
+          if (it.q.correct !== undefined && it.q.correct !== null) {
+            answers[k] = Math.random() < 0.35 + level * 0.5 ? it.q.correct : it.options[Math.floor(Math.random() * it.options.length)].value;
+            return;
+          }
+          const f = it.q.factor || it.section.id;
+          // Profile tests get distinct highs and lows; symptom checks stay steady so trends read clearly
+          if (offsets[f] === undefined) offsets[f] = PROFILE_TESTS.includes(testId) ? (Math.random() - 0.5) * 0.7 : 0;
+          const sorted = [...it.options].sort((a, b) => Number(a.value) - Number(b.value));
+          // The trait level is shared; reverse-worded questions are answered the opposite way
+          const base = Math.max(0, Math.min(1, level + offsets[f]));
+          const lvl = it.q.reverse ? 1 - base : base;
+          const idx = Math.max(0, Math.min(sorted.length - 1, Math.round(lvl * (sorted.length - 1) + (Math.random() - 0.5) * 0.6)));
+          answers[k] = sorted[idx].value;
+        });
+        return answers;
+      }
+
+      const PROFILE_TESTS = ['personality', 'career-interest', 'career-aptitude', 'stream-selector', 'learning-style', 'study-habits'];
+      const DEMO = [
+        ['depression', 56, 0.72], ['depression', 35, 0.55], ['depression', 14, 0.38], ['depression', 1, 0.22],
+        ['anxiety', 56, 0.7], ['anxiety', 35, 0.58], ['anxiety', 14, 0.42], ['anxiety', 1, 0.3],
+        ['sleep', 42, 0.62], ['sleep', 14, 0.4], ['stress-burnout', 30, 0.5], ['wellbeing', 3, 0.3], ['personality', 20, 0.5],
+        ['career-interest', 10, 0.55], ['career-aptitude', 9, 0.6], ['stream-selector', 8, 0.6],
+        ['exam-stress', 40, 0.75], ['exam-stress', 12, 0.5], ['exam-stress', 2, 0.35], ['study-habits', 6, 0.55],
+      ];
+      document.getElementById('demo').onclick = () => {
+        const now = Date.now();
+        const recs = DEMO.map(([id, daysAgo, level]) => Engine.toRecord(id, demoAnswers(id, level), new Date(now - daysAgo * 864e5)));
+        Engine.saveAll(Engine.loadResults().concat(recs));
+        render(current());
+      };
+      document.getElementById('clear').onclick = () => {
+        if (confirm('Remove all saved results from this browser?')) { Engine.clearResults(); render(current()); }
+      };
+
+      const current = () => (location.hash === '#students' ? 'student' : 'adult');
+      tabs.forEach((t) => t.onclick = () => { history.replaceState(null, '', t.dataset.view === 'student' ? '#students' : '#'); render(t.dataset.view); });
+      window.addEventListener('hashchange', () => render(current()));
+      render(current());
+    </script>
+  </body>
+</html>
