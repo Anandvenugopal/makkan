@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Take a test — BrainTest (sample)</title>
+    <title>Take a test — BrainTest</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,20,0;9..144,600,20,0&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="styles.css" />
     <style>
       .sample-banner{background:#ecad83;color:#173432;text-align:center;font-size:12px;font-weight:700;padding:9px 16px}
       .runner{background:radial-gradient(circle at 76% 30%,#e7f2e9 0,#f7f8f5 50%);min-height:calc(100vh - 120px);padding:28px 0 60px}
@@ -75,17 +75,21 @@
       .disclaimer{font-size:11px;color:#8a9890;line-height:1.6;margin-top:22px}
       @media(max-width:560px){.qbody{padding:30px 22px 28px}.qtop{padding:16px 18px}.qnav .button{min-width:0;flex:1}}
     </style>
+      <script src="script.js" defer></script>
   </head>
   <body>
     <header class="site-header">
       <div class="container nav-wrap">
-        <a class="brand" href="tests-sample.html" aria-label="BrainTest tests">
+        <a class="brand" href="index.html" aria-label="BrainTest home">
           <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
           <span>brain<span class="brand-accent">test</span><span class="brand-dot">.</span></span>
         </a>
-        <nav class="site-nav" aria-label="Main navigation">
-          <a class="nav-link" href="tests-sample.html">Home</a>
-          <a class="nav-link active" href="tests-sample.html">Tests</a>
+        <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav">
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+          <a class="nav-link" href="index.html">Home</a>
+          <a class="nav-link active" href="tests.html" aria-current="page">Tests</a>
           <a class="nav-link" href="dashboard.html">Dashboard</a>
           <a class="nav-link" href="pricing.html">Pricing</a>
         </nav>
@@ -94,7 +98,7 @@
 
     <main class="runner">
       <div class="runner-wrap">
-        <a class="back-link" id="back-link" href="tests-sample.html">← All tests</a>
+        <a class="back-link" id="back-link" href="tests.html">← All tests</a>
         <div class="qcard">
           <div class="qtop"><span class="preview-logo">✳</span><span class="qtop-title" id="qtop-title">BrainTest / Assessment</span><span id="qtop-count"></span></div>
           <div class="qprogress"><span id="qprogress" style="width:0"></span></div>
@@ -123,7 +127,7 @@
 
       const key = Engine.keyOf;
       const audience = root && root.audience === 'student' ? '#students' : '';
-      document.getElementById('back-link').href = 'tests-sample.html' + audience;
+      document.getElementById('back-link').href = 'tests.html' + audience;
 
       function renderIntro() {
         bar.style.width = '0';
@@ -282,7 +286,7 @@
       if (!root || !items.length) {
         body.innerHTML = `<h1 class="qtext">This test isn't available in the sample yet.</h1><p class="qstem">Pick another test from the list.</p>`;
       } else {
-        document.title = `${root.title} — BrainTest (sample)`;
+        document.title = `${root.title} — BrainTest`;
         go(-1);
       }
     </script>

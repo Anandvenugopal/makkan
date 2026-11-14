@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard — BrainTest (sample)</title>
+    <title>Dashboard — BrainTest</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,20,0;9..144,600,20,0&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="styles.css" />
     <style>
       .dash{background:#fff;padding:72px 0 96px;min-height:70vh}
       .dash-head{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:end}
@@ -64,17 +64,21 @@
       @media(max-width:1100px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.hub{grid-template-columns:1fr 1fr}.hub .panel:last-child{grid-column:1 / -1}}
       @media(max-width:760px){.dash{padding:48px 0 72px}.dash-head{grid-template-columns:1fr;gap:16px}.dash-head p{width:auto}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.progress-grid,.hub{grid-template-columns:1fr}.hist{grid-template-columns:1fr;gap:12px}}
     </style>
+      <script src="script.js" defer></script>
   </head>
   <body>
     <header class="site-header">
       <div class="container nav-wrap">
-        <a class="brand" href="tests-sample.html" aria-label="BrainTest tests">
+        <a class="brand" href="index.html" aria-label="BrainTest home">
           <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
           <span>brain<span class="brand-accent">test</span><span class="brand-dot">.</span></span>
         </a>
-        <nav class="site-nav" aria-label="Main navigation">
-          <a class="nav-link" href="home-option-b.html">Home</a>
-          <a class="nav-link" href="tests-sample.html">Tests</a>
+        <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav">
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+          <a class="nav-link" href="index.html">Home</a>
+          <a class="nav-link" href="tests.html">Tests</a>
           <a class="nav-link active" href="dashboard.html" aria-current="page">Dashboard</a>
           <a class="nav-link" href="pricing.html">Pricing</a>
         </nav>
@@ -101,6 +105,37 @@
         <div class="dash-tools"><button type="button" id="demo">Load demo results</button><button type="button" id="clear">Clear all results</button></div>
       </div>
     </main>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-cta">
+          <div>
+            <div class="section-kicker light"><span></span> GET IN TOUCH</div>
+            <h2>Let&rsquo;s talk about <em>what&rsquo;s next.</em></h2>
+          </div>
+          <div class="footer-cta-actions">
+            <a class="button button-light" href="tel:+917510890905">Call us <span aria-hidden="true">↗</span></a>
+            <a class="button button-outline" href="mailto:cm@atlasglobalinstitute.com">Email us <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div class="footer-main">
+          <div class="footer-about">
+            <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>brain<span class="brand-accent">test</span><span class="brand-dot">.</span></span></a>
+            <p>A calm, clinician-minded space for assessments and meaningful next steps.</p>
+            <nav class="footer-links" aria-label="Footer"><a href="index.html">Home</a><a href="tests.html">Tests</a><a href="tests.html#students">Student tests</a></nav>
+          </div>
+          <ul class="footer-contact">
+            <li><span class="footer-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span><div><small>CALL</small><a href="tel:+917510890905">+91 75108 90905</a></div></li>
+            <li><span class="footer-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span><div><small>EMAIL</small><a href="mailto:cm@atlasglobalinstitute.com">cm@atlasglobalinstitute.com</a></div></li>
+            <li><span class="footer-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></span><div><small>VISIT</small><address>Atlas Global Institute, NSR Building, 1st Floor,<br />Pullikkanakku P.O, Kayamkulam, Alappuzha, Kerala 690537</address></div></li>
+          </ul>
+          <div class="footer-map">
+            <iframe title="Map showing Atlas Global Institute, Kayamkulam" src="https://maps.google.com/maps?q=Atlas+Global+Institute,+NSR+Building,+Pullikkanakku,+Kayamkulam,+Alappuzha,+Kerala+690537&amp;z=15&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <a class="footer-map-bar" href="https://maps.app.goo.gl/mPJT2xqTc3BGAL7p6?g_st=ac" target="_blank" rel="noopener"><span><strong>Atlas Global Institute</strong>Kayamkulam, Kerala</span><span class="footer-map-go">Directions <span aria-hidden="true">↗</span></span></a>
+          </div>
+        </div>
+        <div class="footer-bottom"><span>© <span id="year">2026</span> BrainTest · Atlas Global Institute</span><span>Designed to make the first step feel easier.</span></div>
+      </div>
+    </footer>
 
     <script src="data/tests-data.js"></script>
     <script src="js/engine.js"></script>
@@ -189,7 +224,7 @@
         document.getElementById('saved-count').innerHTML = `<strong>${all.length}</strong> reports saved in this browser`;
         tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.view === audience)));
         if (!mine.length) {
-          view.innerHTML = `<div class="empty-state"><h2>No ${audience === 'adult' ? '' : 'student '}results yet</h2><p>Finish any test and its report will appear here automatically.</p><div class="actions"><a class="button button-primary" href="tests-sample.html${audience === 'student' ? '#students' : ''}">Browse tests <span aria-hidden="true">↗</span></a></div></div>`;
+          view.innerHTML = `<div class="empty-state"><h2>No ${audience === 'adult' ? '' : 'student '}results yet</h2><p>Finish any test and its report will appear here automatically.</p><div class="actions"><a class="button button-primary" href="tests.html${audience === 'student' ? '#students' : ''}">Browse tests <span aria-hidden="true">↗</span></a></div></div>`;
           return;
         }
         view.innerHTML = (audience === 'adult' ? snapshot(mine, 'adult') + progress(mine, 'adult') : careerHub(mine) + snapshot(mine, 'student') + progress(mine, 'student')) + historyList(mine);
